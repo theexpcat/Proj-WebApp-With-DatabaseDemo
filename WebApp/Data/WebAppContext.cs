@@ -11,6 +11,6 @@ namespace WebApp.Data
             Database.EnsureCreated();
         }
 
-        public DbSet<Employee> Employee { get; set; }
+        public DbSet<Employee> Employee { get; set; } = null!;
     }
 }

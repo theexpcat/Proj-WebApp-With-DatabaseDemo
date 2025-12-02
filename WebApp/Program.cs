@@ -3,8 +3,14 @@ using Microsoft.Extensions.DependencyInjection;
 using WebApp.Data;
 var builder = WebApplication.CreateBuilder(args);
 
+var connectionString = builder.Configuration.GetConnectionString("WebAppContext");
+if (string.IsNullOrEmpty(connectionString))
+{
+    throw new InvalidOperationException("Connection string 'WebAppContext' not found.");
+}
+
 builder.Services.AddDbContext<WebAppContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("WebAppContext")));
+    options.UseSqlServer(connectionString));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

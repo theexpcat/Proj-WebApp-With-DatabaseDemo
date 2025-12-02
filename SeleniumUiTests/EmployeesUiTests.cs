@@ -12,13 +12,16 @@ namespace SeleniumUiTests
     {
         private string _websiteURL = "https://localhost:7048/";
         //private string _websiteURL = "https://ignite-webapp-test-997.azurewebsites.net/";
-        private WebDriver _browserDriver;
-        public TestContext TestContext { get; set; }
+        private WebDriver? _browserDriver;
+        public TestContext? TestContext { get; set; }
 
         [TestInitialize()]
         public void PU_SearchTests_Initialize()
         {
-            _websiteURL = (string) TestContext.Properties["webAppUrl"];
+            if (TestContext != null && TestContext.Properties["webAppUrl"] != null)
+            {
+                _websiteURL = TestContext.Properties["webAppUrl"]?.ToString() ?? _websiteURL;
+            }
         }
 
         [TestMethod]
@@ -53,7 +56,10 @@ namespace SeleniumUiTests
             var screenshot = _browserDriver.GetScreenshot();
             var fileName = $"{fullname}.jpg";
             screenshot.SaveAsFile(fileName, ScreenshotImageFormat.Jpeg);
-            TestContext.AddResultFile(fileName);
+            if (TestContext != null)
+            {
+                TestContext.AddResultFile(fileName);
+            }
             
             // Act
             _browserDriver.FindElement(By.Id("SubmitButton")).Click();
@@ -71,7 +77,10 @@ namespace SeleniumUiTests
         [TestCleanup()]
         public void PU_SearchTests_Cleanup()
         {
-            _browserDriver.Quit();
+            if (_browserDriver != null)
+            {
+                _browserDriver.Quit();
+            }
         }
 
     }

@@ -140,7 +140,11 @@ namespace WebApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var employee = await _context.Employee.FindAsync(id);
-            _context.Employee.Remove(employee);
+            if (employee != null)
+            {
+                _context.Employee.Remove(employee);
+            }
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
